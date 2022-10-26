@@ -1,0 +1,5 @@
+from saveconf.save import main
+
+
+if '__name__' == '__main__':
+    main()

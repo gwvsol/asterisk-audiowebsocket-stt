@@ -1,0 +1,63 @@
+export DOCKER=$(shell which docker)
+export COMPOSE=$(shell which docker-compose)
+export AUDIOWEBSOCKET=audiowebsocket
+export COMPOSE_FILE=docker-compose.yml
+export DOCKERFILE=Dockerfile
+export RELEASE_IMAGE=latest
+
+#===========================================================
+# ############## Запуск приложения в Docker ################
+#===========================================================
+
+# Сборка AUDIOWEBSOCKET
+.PHONY: build-audiowebsocket
+build-audiowebsocket: ${DOCKER} ${DOCKERFILE}
+	@make release
+	@${DOCKER} build \
+	--file ./${DOCKERFILE} \
+	--build-arg TIMEZONE=${TIMEZONE} \
+	--build-arg USER_ID=${USER_ID} \
+	--build-arg GROUP_ID=${USER_ID} \
+	--tag ${AUDIOWEBSOCKET}:${RELEASE_IMAGE} ./
+
+# Cтарт AUDIOWEBSOCKET
+.PHONY: start-audiowebsocket
+start-audiowebsocket: ${DOCKER} ${DOCKERFILE}
+#	@[ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] ||
+	${COMPOSE} -f ${COMPOSE_FILE} up -d ${AUDIOWEBSOCKET}
+#	${DOCKER} run \
+#	--name ${AUDIOWEBSOCKET} \
+#	--rm \
+#	--volume ${ENVFILE}:/usr/src/.env \
+#	--publish ${AUDIOWEBSOCKET_PORT}:${AUDIOWEBSOCKET_PORT} \
+#	--detach ${AUDIOWEBSOCKET}:${RELEASE_IMAGE}
+# 	--restart=always
+
+# Стоп AUDIOWEBSOCKET
+.PHONY: stop-audiowebsocket
+stop-audiowebsocket: ${DOCKER} ${DOCKERFILE}
+	@! [ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] || \
+	${COMPOSE} -f ${COMPOSE_FILE} stop ${AUDIOWEBSOCKET} \
+	&& ${DOCKER} rm ${AUDIOWEBSOCKET}
+
+# Рестарт AUDIOWEBSOCKET
+.PHONY: restart-audiowebsocket
+restart-audiowebsocket: ${DOCKER} ${COMPOSE} ${COMPOSE_FILE} ${DOCKERFILE}
+	@! [ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] || \
+	make stop-audiowebsocket
+	@sleep 3
+	@make start-audiowebsocket
+
+# Удаление AUDIOWEBSOCKET
+.PHONY: remove-audiowebsocket
+remove-audiowebsocket: ${DOCKER} ${DOCKERFILE}
+#	@make stop-audiowebsocket
+	@${DOCKER} rmi ${AUDIOWEBSOCKET}:${RELEASE_IMAGE}
+
+# Логирование AUDIOWEBSOCKET
+.PHONY: log-audiowebsocket
+log-audiowebsocket: ${DOCKER} ${COMPOSE} ${COMPOSE_FILE} ${DOCKERFILE}
+	@! [ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] || \
+		${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
+#		${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
+#		${DOCKER} logs --follow --tail 500 ${AUDIOWEBSOCKET}
