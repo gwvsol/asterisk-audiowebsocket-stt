@@ -1,0 +1,16 @@
+version: "3.3"
+
+services:
+
+  audiowebsocket:
+    container_name: audiowebsocket
+    image: audiowebsocket:latest
+    ports:
+      - 3700:3700
+    restart: unless-stopped
+    volumes:
+      - ./audiowebsocket.conf:/src/audiowebsocket.conf
+      - ./model:/src/model
+    logging:
+      driver: journald
+    command: make run-audiowebsocket
