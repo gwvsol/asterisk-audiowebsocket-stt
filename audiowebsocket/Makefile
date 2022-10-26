@@ -204,9 +204,9 @@ uninstall-vosk-model:
 # ########## Cборка/Запуск приложения в Docker #############
 #===========================================================
 
-# Сборка AUDIOWEBSOCKET
-.PHONY: build-docker-base
-build-docker-base: ${DOCKER} ${DOCKERFILE_BASE}
+# Сборка AUDIOWEBSOCKET BASE IMAGE
+.PHONY: build-base
+build-base: ${DOCKER} ${DOCKERFILE_BASE}
 	@${DOCKER} build \
 	--file $(PWD_APP)/${DOCKERFILE_BASE} \
 	--build-arg TIMEZONE=${TIMEZONE} \
@@ -214,9 +214,9 @@ build-docker-base: ${DOCKER} ${DOCKERFILE_BASE}
 	--build-arg GROUP_ID=${USER_ID} \
 	--tag ${AUDIOWEBSOCKET}-base:${RELEASE_IMAGE} ./
 
-# Сборка AUDIOWEBSOCKET
-.PHONY: build-docker-audiowebsocket
-build-docker-audiowebsocket: ${DOCKER} ${DOCKERFILE}
+# Сборка AUDIOWEBSOCKET IMAGE
+.PHONY: build-docker
+build-docker: ${DOCKER} ${DOCKERFILE}
 	@make release
 	@${DOCKER} build \
 	--file $(PWD_APP)/${DOCKERFILE} \
@@ -224,16 +224,3 @@ build-docker-audiowebsocket: ${DOCKER} ${DOCKERFILE}
 	--build-arg USER_ID=${USER_ID} \
 	--build-arg GROUP_ID=${USER_ID} \
 	--tag ${AUDIOWEBSOCKET}:${RELEASE_IMAGE} ./
-
-# Cтарт AUDIOWEBSOCKET
-.PHONY: start-docker-audiowebsocket
-start-docker-audiowebsocket: ${DOCKER} ${DOCKERFILE}
-	@[ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] || \
-	${DOCKER} run \
-	--name ${AUDIOWEBSOCKET} \
-	--rm \
-	--volume ${AUDIOWEBSOCKET_CONFIG}:/src/${AUDIOWEBSOCKET_CONFIG} \
-	--volume ${AUDIOWEBSOCKET_VOSK_MODEL_DIR}:/src/${AUDIOWEBSOCKET_VOSK_MODEL_DIR} \
-	--publish ${AUDIOWEBSOCKET_PORT}:${AUDIOWEBSOCKET_PORT} \
-	--detach ${AUDIOWEBSOCKET}:${RELEASE_IMAGE} \
-	--restart=always

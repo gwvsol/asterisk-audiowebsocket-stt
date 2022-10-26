@@ -46,6 +46,11 @@ ifneq ("$(wildcard $(PWD_APP)/$(SAVECONFIG)/$(MAKEFILE))","")
    include $(SAVECONFIG)/$(MAKEFILE)
 endif
 
+# AUDIOWEBSOCKET
+ifneq ("$(wildcard $(PWD_APP)/$(MAKEFILE_DOCKER))","")
+   include $(MAKEFILE_DOCKER)
+endif
+
 #
 #===========================================================
 #
