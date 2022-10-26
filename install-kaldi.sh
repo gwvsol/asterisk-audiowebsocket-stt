@@ -77,31 +77,31 @@ git clone -b vosk --single-branch ${KALDI_GIT} ${KALDI_DIR} \
     && make -j $(nproc) online2 lm rnnlm
 
 if [[ $? -ne 0 ]]; then
-echo "########################## ERROR BUILD KALDI ##########################"
+    echo "################################# ERROR BUILD KALDI ##################################"
     exit 1
 else
-    echo "######################## BUILD KALDI OK! ########################"
+    echo "################################## BUILD KALDI OK! ###################################"
 fi
 }
 
 remove-kaldi(){
 # Удаление kaldi
-echo "######################## REMOVE KALDI ############################"
+echo "################################## REMOVE KALDI ######################################"
 cd ${PWD_APP}
 rm -fr ${KALDI_DIR}
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR REMOVE KALDI ###########################"
+    echo "############################### ERROR REMOVE KALDI ###############################"
     exit 1
 else
-    echo "###################### REMOVE KALDI OK! #########################"
+    echo "################################## REMOVE KALDI OK! ##################################"
 fi
 }
 
 
 build-vosk-api() {
 # Сборка vosk-api
-echo "######################## BUILD VOSK-API ############################"
+echo "################################### BUILD VOSK-API ###################################"
 cd ${PWD_APP}
 git clone ${VOSKAPI_GIT} ${VOSKAPI_DIR} \
     && cd ${VOSKAPI_DIR} \
@@ -111,32 +111,32 @@ git clone ${VOSKAPI_GIT} ${VOSKAPI_DIR} \
     && rm -f *.o
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR BUILD VOSK-API ###########################"
+    echo "################################ ERROR BUILD VOSK-API ################################"
     exit 1
 else
-    echo "###################### BUILD VOSK-API OK! #########################"
+    echo "################################# BUILD VOSK-API OK! #################################"
 fi
 }
 
 
 remove-vosk-api(){
 # Удаление vosk-api
-echo "######################## REMOVE VOSK-API ############################"
+echo "################################## REMOVE VOSK-API ###################################"
 cd ${PWD_APP}
 rm -fr ${VOSKAPI_DIR}
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR REMOVE VOSK-API ###########################"
+    echo "############################### ERROR REMOVE VOSK-API ################################"
     exit 1
 else
-    echo "###################### REMOVE VOSK-API OK! #########################"
+    echo "################################ REMOVE VOSK-API OK! #################################"
 fi
 }
 
 
 install-apps() {
 # Установка vosk-api
-echo "######################## INSTALL VOSK-API ############################"
+echo "################################## INSTALL VOSK-API ##################################"
 
 cd ${PWD_APP}
 make install-audiowebsocket
@@ -145,31 +145,31 @@ cd ${VOSKAPI_DIR}/python \
     && ${PWD_APP}/venv/bin/python3 ./setup.py install
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR BUILD VOSK-API ###########################"
+    echo "################################ ERROR BUILD VOSK-API ################################"
     exit 1
 else
-    echo "###################### BUILD VOSK-API OK! #########################"
+    echo "################################# BUILD VOSK-API OK! #################################"
 fi
 }
 
 uninstall-apps(){
 # Деинсталяция vosk-api
-echo "######################## UNINSTALL VOSK-API ############################"
+echo "################################# UNINSTALL VOSK-API #################################"
 
 cd ${PWD_APP}
 make uninstall && cd ${PWD_APP} && rm -fr kaldi vosk-api
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR UNINSTALL VOSK-API ###########################"
+    echo "############################## ERROR UNINSTALL VOSK-API ##############################"
     exit 1
 else
-    echo "###################### UNINSTALL VOSK-API OK! #########################"
+    echo "############################### UNINSTALL VOSK-API OK! ###############################"
 fi
 }
 
 install-vosk-model() {
 # Установка vosk-model
-echo "######################## INSTALL VOSK-MODEL ############################"
+echo "################################# INSTALL VOSK-MODEL #################################"
 
 cd ${PWD_APP}
 if ! [ -e ${VOSK_MODEL_DIR} ]; then
@@ -194,26 +194,26 @@ else
 fi
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR BUILD VOSK-MODEL ###########################"
+    echo "############################### ERROR BUILD VOSK-MODEL ###############################"
     exit 1
 else
-    echo "###################### BUILD VOSK-MODEL OK! #########################"
+    echo "################################ BUILD VOSK-MODEL OK! ################################"
 fi
 }
 
 
 uninstall-vosk-model(){
 # Деинсталяция vosk-model
-echo "######################## UNINSTALL VOSK-MODEL ############################"
+echo "################################ UNINSTALL VOSK-MODEL ################################"
 
 cd ${PWD_APP}
 rm -rf ${VOSK_MODEL_DIR}
 
 if [[ $? -ne 0 ]]; then
-    echo "######################## ERROR UNINSTALL VOSK-MODEL ###########################"
+    echo "############################# ERROR UNINSTALL VOSK-MODEL #############################"
     exit 1
 else
-    echo "###################### UNINSTALL VOSK-MODEL OK! #########################"
+    echo "############################## UNINSTALL VOSK-MODEL OK! ##############################"
 fi
 }
 
@@ -262,7 +262,7 @@ case $1 in
           uninstall-vosk-model # Деинсталяция vosk-model
           ;;
     "--help" )
-          echo "################################## HELP ####################################"
+          echo "######################################## HELP ########################################"
           echo " $0 --update             | Установка обновлений системы"
           echo " $0 --dependents         | Установка зависимостей"
           echo " $0 --build              | Установка и сборка приложения"
@@ -273,11 +273,11 @@ case $1 in
           echo " $0 --install-apps       | Установка vosk-api и приложения audiowebsocket"
           echo " $0 --uninstall-apps     | Деинсталяция vosk-api и приложения audiowebsocket"
           echo " $0 --help               | Справка по работе со скриптом"
-          echo "############################################################################"
+          echo "######################################################################################"
           ;;
      *)
-          echo "############################################################################"
+          echo "######################################################################################"
           echo " HELP по работе со скриптом $0 --help"
-          echo "############################################################################"
+          echo "######################################################################################"
           ;;
 esac
