@@ -1,0 +1,9 @@
+kaldi
+model
+vosk*
+venv
+*.egg-info
+__pycache__
+*.pyc
+*.conf
+archive
