@@ -3,12 +3,10 @@
 ## STAGE 1: Build kaldi and vosk-api
 ##
 
-# Какой используем образ
 FROM fedora:36
 LABEL maintainer="Mikhail Fedorov" email="jwvsol@yandex.ru"
 LABEL version="latest"
 
-# Устанавливаем переменные окружения
 ARG TIMEZONE
 ENV TIMEZONE=${TIMEZONE:-Europe/Moscow}
 ARG USER_ID
@@ -22,26 +20,19 @@ ENV GROUP_ID ${GROUP_ID:-1000}
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-# ENV DEBIAN_FRONTEND noninteractive
 
-# Переменная оболочки 
 ENV SHELL=/bin/bash
 
-# Имя релиза приложения
 ENV APPS=audiowebsocket
 
-# Директория для запуска сервиса
 ENV APP_DIR=/src
 
-# Создаем не привилигированного пользователя
 RUN groupadd --gid ${GROUP_ID} $APPS \
   && useradd --uid ${USER_ID} --gid $APPS --shell $SHELL --create-home $APPS
 
 ADD install-kaldi.sh $APP_DIR/install-kaldi.sh
 ADD .env $APP_DIR/.env
 
-# Начальные настроки
-# Установка зависимостей и приложения
 RUN set -eux \
     && dnf update -y \
     && dnf install -y make zip unzip tzdata ncurses \
@@ -49,14 +40,10 @@ RUN set -eux \
     && chmod +x ${APP_DIR}/install-kaldi.sh \
     && chown -Rf $APPS:$APPS $APP_DIR
 
-# Переключаемся на $APP_DIR
 WORKDIR $APP_DIR
 
-# Устанавливаем зависимости
 RUN source ./.env && ./install-kaldi.sh --dependents
 
-# Переключаем на не 
-# привилигированного пользователя
 USER $APPS
 
 RUN source ./.env \
