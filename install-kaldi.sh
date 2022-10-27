@@ -1,7 +1,10 @@
 #!/bin/bash
 system=$(awk -F= '$1 == "ID" { gsub(/"/, "", $NF); print($NF) }' /etc/*release)
 
-PWD_APP=$(pwd)
+if [[ -z ${PWD_APP} ]]; then
+    PWD_APP=$(pwd)
+    echo "SETTING THE PWD_APP VARIABLE => ${PWD_APP}"
+fi
 
 
 update() {
