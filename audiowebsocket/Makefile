@@ -16,12 +16,12 @@ install:
 install-dev: ${AUDIOWEBSOCKET_DEPENDENTS_DEV}
 	@printf "\033[0m"
 	@printf "\033[32m"
-	@echo "================================= Install DEV ================================="
+	@echo "================================= INSTALL DEV ================================="
 	@[ -d $(VENV_NAME) ] || python3.8 -m $(VENV_NAME) $(VENV_NAME)
 	@${PIP} install pip wheel -U
 	@${PIP} install -r ${AUDIOWEBSOCKET_DEPENDENTS_DEV}
 	@printf "\033[36m"
-	@echo "============================== Install DEV OK! ================================"
+	@echo "============================== INSTALL DEV OK! ================================"
 	@printf "\033[0m"
 
 # Активация виртуального окружения
@@ -206,17 +206,18 @@ uninstall-vosk-model:
 
 # Сборка AUDIOWEBSOCKET BASE IMAGE
 .PHONY: build-base
-build-base: ${DOCKER} ${DOCKERFILE_BASE}
+build-base: ${DOCKERFILE_BASE}
 	@${DOCKER} build \
 	--file $(PWD_APP)/${DOCKERFILE_BASE} \
 	--build-arg TIMEZONE=${TIMEZONE} \
 	--build-arg USER_ID=${USER_ID} \
 	--build-arg GROUP_ID=${USER_ID} \
 	--tag ${AUDIOWEBSOCKET}-base:${RELEASE_IMAGE} ./
+	@${DOCKER} image prune --filter label=stage=builder --force
 
 # Сборка AUDIOWEBSOCKET IMAGE
 .PHONY: build-docker
-build-docker: ${DOCKER} ${DOCKERFILE}
+build-docker: ${DOCKERFILE}
 	@make release
 	@${DOCKER} build \
 	--file $(PWD_APP)/${DOCKERFILE} \
@@ -224,3 +225,4 @@ build-docker: ${DOCKER} ${DOCKERFILE}
 	--build-arg USER_ID=${USER_ID} \
 	--build-arg GROUP_ID=${USER_ID} \
 	--tag ${AUDIOWEBSOCKET}:${RELEASE_IMAGE} ./
+	@${DOCKER} image prune --filter label=stage=builder --force
