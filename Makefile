@@ -10,8 +10,8 @@ PYINSTALLER=${VENV_BIN}/pyinstaller
 PYCODESTYLE=${VENV_BIN}/pycodestyle
 PYFLAKES=${VENV_BIN}/pyflakes
 #
-export DOCKER=$(shell which docker)
-export COMPOSE=$(shell which docker-compose)
+# export DOCKER=$(shell which docker)
+# export COMPOSE=$(shell which docker-compose)
 export PWD_APP=$(shell pwd)
 export USER_ID=$(shell id -u `whoami`)
 #

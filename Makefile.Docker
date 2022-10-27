@@ -1,8 +1,7 @@
-export DOCKER=$(shell which docker)
-export COMPOSE=$(shell which docker-compose)
+export DOCKER=docker
+export COMPOSE=docker-compose
 export AUDIOWEBSOCKET=audiowebsocket
 export COMPOSE_FILE=docker-compose.yml
-export DOCKERFILE=Dockerfile
 export RELEASE_IMAGE=latest
 
 #===========================================================
@@ -11,32 +10,31 @@ export RELEASE_IMAGE=latest
 
 # Cтарт AUDIOWEBSOCKET
 .PHONY: start-audiowebsocket
-start-audiowebsocket: ${DOCKER} ${COMPOSE_FILE}
+start-audiowebsocket: ${COMPOSE_FILE}
 	${COMPOSE} -f ${COMPOSE_FILE} up -d ${AUDIOWEBSOCKET}
 
 # Стоп AUDIOWEBSOCKET
 .PHONY: stop-audiowebsocket
-stop-audiowebsocket: ${DOCKER} ${COMPOSE_FILE}
+stop-audiowebsocket: ${COMPOSE_FILE}
 	@${COMPOSE} -f ${COMPOSE_FILE} stop ${AUDIOWEBSOCKET} \
 	&& ${DOCKER} rm ${AUDIOWEBSOCKET}
 
 # Рестарт AUDIOWEBSOCKET
 .PHONY: restart-audiowebsocket
-restart-audiowebsocket: ${DOCKER} ${COMPOSE} ${COMPOSE_FILE}
+restart-audiowebsocket: ${COMPOSE_FILE}
 	@make stop-audiowebsocket
 	@sleep 3
 	@make start-audiowebsocket
 
 # Удаление AUDIOWEBSOCKET
 .PHONY: remove-audiowebsocket
-remove-audiowebsocket: ${DOCKER} ${COMPOSE_FILE}
+remove-audiowebsocket: ${COMPOSE_FILE}
 #	@make stop-audiowebsocket
 	@${DOCKER} rmi ${AUDIOWEBSOCKET}:${RELEASE_IMAGE}
 
 # Логирование AUDIOWEBSOCKET
 .PHONY: log-audiowebsocket
-log-audiowebsocket: ${DOCKER} ${COMPOSE} ${COMPOSE_FILE} ${DOCKERFILE}
-	@! [ `${DOCKER} ps | grep ${AUDIOWEBSOCKET} | wc -l` -eq 1 ] || \
-		${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
-#		${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
-#		${DOCKER} logs --follow --tail 500 ${AUDIOWEBSOCKET}
+log-audiowebsocket: ${COMPOSE_FILE}
+	${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
+#	 ${COMPOSE} -f ${COMPOSE_FILE} logs --follow --tail 500 ${AUDIOWEBSOCKET}
+#    ${DOCKER} logs --follow --tail 500 ${AUDIOWEBSOCKET}
