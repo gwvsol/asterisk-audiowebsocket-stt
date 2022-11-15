@@ -4,11 +4,11 @@
 install:
 	@printf "\033[0m"
 	@printf "\033[32m"
-	@echo "================================= Install VENV ================================"
+	@echo "================================= INSTALL VENV ================================"
 	@[ -d $(VENV_NAME) ] || python3 -m $(VENV_NAME) $(VENV_NAME)
 	@${PIP} install pip wheel -U
 	@printf "\033[36m"
-	@echo "============================== Install VENV OK! ==============================="
+	@echo "============================== INSTALL VENV OK! ==============================="
 	@printf "\033[0m"
 
 # Установка зависимостей для проверки кода
@@ -84,9 +84,9 @@ clean:
 	@echo "===================================== CLEAN ====================================="
 	@[ -d $(RELEASE) ] || mkdir ${RELEASE}
 	@[ -d $(ARCHIVE) ] || mkdir ${ARCHIVE}
-	@find . '(' -path ./archive -o -path ./venv ')' -prune -o '(' -name '*.tar.xz' -o -name '*.zip' ')' -type f -exec mv -v -t "$(ARCHIVE)" {} +
-	@find . '(' -path ./archive -o -path ./venv ')' -prune -o '(' -name '*.egg-info' -o -name '.eggs' -o -name '*~' -o -name '__pycache__' ')' -exec rm -fr {} +
-	@find . '(' -path ./archive -o -path ./venv ')' -prune -o '(' -name '*.pyc' -o -name '*.pyo' -o -name '*.spec' ')' -type f -exec rm {} +
+	@find . '(' -path ./$(ARCHIVE) -o -path ./${VENV_NAME} ')' -prune -o '(' -name '*.tar.xz' -o -name '*.zip' ')' -type f -exec mv -v -t "$(ARCHIVE)" {} +
+	@find . '(' -path ./$(ARCHIVE) -o -path ./${VENV_NAME} ')' -prune -o '(' -name '*.egg-info' -o -name '.eggs' -o -name '*~' -o -name '__pycache__' ')' -exec rm -fr {} +
+	@find . '(' -path ./$(ARCHIVE) -o -path ./${VENV_NAME} ')' -prune -o '(' -name '*.pyc' -o -name '*.pyo' -o -name '*.spec' ')' -type f -exec rm {} +
 	@printf "\033[36m"
 	@echo "=================================== CLEAN OK! ==================================="
 	@printf "\033[0m"
